@@ -2,7 +2,7 @@ const productDAO = require("../DAO/product");
 
 // async function getProduct() {
 //     try {
-//         const products = await productDAO.getAllProduct();
+//         const products = await productDAO.getListBook();
 //         return products; // In ra kết quả truy vấn
 //     } catch (err) {
 //         console.error(err); // Xử lý lỗi
@@ -12,9 +12,8 @@ const productDAO = require("../DAO/product");
 class SiteController {
     //homepage
     homePage(req, res) {
-        // res.json(await getProduct());
 
-        productDAO.getAllProduct()
+        productDAO.getListBook()
             .then((data) => {
                 res.json(data);
             })

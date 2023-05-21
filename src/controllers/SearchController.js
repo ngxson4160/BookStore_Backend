@@ -1,8 +1,9 @@
-const productDAO = require("../DAO/product");
+const productDAO = require("../DAO/book");
 class SearchController {
-    query(req, res) {
-        let q = req.query.q;
-        let page = 1;
+    searchBook(req, res) {
+        let q = '';
+        let page = 1, pageSize = 2;
+        if(req.query.q) q = req.query.q;
         if(req.query.page) page = req.query.page;
         if (q.length === 0) {
             res.status(404).json({
@@ -10,7 +11,7 @@ class SearchController {
                 data: null,
             });
         } else {
-            productDAO.getProductByQuery(q, Number((page-1)*3), 10)
+            productDAO.getBookBySearch(q, Number((page-1)*pageSize), pageSize)
                 .then((value) => {
                     if(value.length === 0) {
                         res.status(404).json({
