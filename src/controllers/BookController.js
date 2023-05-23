@@ -12,9 +12,9 @@ const bookDAO = require("../DAO/book");
 class BookController {
     //homepage
     getListBook(req, res) {
-        let page = 1, pageSize = 3;
+        let page = 1, pageSize = 10;
         if(req.query.page) page = req.query.page;
-        bookDAO.getListBook(Number((page-1)*pageSize), pageSize)
+        bookDAO.getListBook(Number((page-1)*pageSize), pageSize, req.query.author, req.query.price)
             .then((data) => {
                 if(data.length === 0){
                     res.status(404).json({
