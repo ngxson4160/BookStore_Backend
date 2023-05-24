@@ -73,6 +73,7 @@ class BookDAO {
             });
         });
     }
+
 }
 
 module.exports = new BookDAO();

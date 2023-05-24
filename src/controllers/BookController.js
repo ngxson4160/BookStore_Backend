@@ -18,13 +18,15 @@ class BookController {
             .then((data) => {
                 if(data.length === 0){
                     res.status(404).json({
-                        message: 'NOT FOUND',
+                        status: 'NOT FOUND',
                         data: null
                     })
                 }else{
                     res.json({
-                        message: 'Thành công',
+                        status: 'Thành công',
                         total: data.length,
+                        page: Number(page),
+                        pageSize: pageSize,
                         data: data
                     })
                 }

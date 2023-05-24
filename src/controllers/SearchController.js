@@ -7,7 +7,7 @@ class SearchController {
         if(req.query.page) page = req.query.page;
         if (q.length === 0) {
             res.status(404).json({
-                message: "NOT FOUND",
+                status: "NOT FOUND",
                 data: null,
             });
         } else {
@@ -15,12 +15,12 @@ class SearchController {
                 .then((value) => {
                     if(value.length === 0) {
                         res.status(404).json({
-                            message: "NOT FOUND",
+                            status: "NOT FOUND",
                             data: null,
                         });
                     }else{
                         res.status(200).json({
-                            message: "Thành công",
+                            status: "Thành công",
                             total: value.length,
                             data: value,
                         });

@@ -10,6 +10,17 @@ class AuthorDAO {
             });
         });
     }
+
+    addAuthor(image, name, description, dateOfBirth){
+        let sql = `INSERT INTO Book_Store.author(image, name, description, dateOfBirth) VALUES(?, ?, ?, ?)`;
+        return new Promise((resolve, reject) => {
+            connection.query(sql, [image, name, description, dateOfBirth], (err, data) => {
+                if(err) reject(err);
+                else resolve(data)
+            })
+            
+        })
+    }
 }
 
 module.exports = new AuthorDAO();
