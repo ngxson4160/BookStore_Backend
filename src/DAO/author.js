@@ -11,15 +11,24 @@ class AuthorDAO {
         });
     }
 
-    addAuthor(image, name, description, dateOfBirth){
+    getDetailAuthor(id) {
+        let sql = "SELECT * FROM Book_Store.author WHERE id = ?";
+        return new Promise((resolve, reject) => {
+            connection.query(sql, id, (err, data) => {
+                if (err) reject(err);
+                else resolve(data);
+            });
+        });
+    }
+
+    addAuthor(image, name, description, dateOfBirth) {
         let sql = `INSERT INTO Book_Store.author(image, name, description, dateOfBirth) VALUES(?, ?, ?, ?)`;
         return new Promise((resolve, reject) => {
             connection.query(sql, [image, name, description, dateOfBirth], (err, data) => {
-                if(err) reject(err);
-                else resolve(data)
-            })
-            
-        })
+                if (err) reject(err);
+                else resolve(data);
+            });
+        });
     }
 }
 

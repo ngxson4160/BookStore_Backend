@@ -1,10 +1,5 @@
 const authorDAO = require("../DAO/author");
-
-function isValidDateTime(dateTimeString) {
-    // Kiểm tra định dạng ngày tháng hợp lệ (ví dụ: 'YYYY-MM-DD' hoặc 'YYYY-M-D')
-    const dateTimeRegex = /^\d{4}-\d{1,2}-\d{1,2}$/;
-    return dateTimeRegex.test(dateTimeString);
-}
+const isValidDateTime = require("../ultils/CheckFormatDateTime");
 
 class AuthorController {
     getListAuthor(req, res) {
@@ -23,22 +18,39 @@ class AuthorController {
             .catch((err) => console.log(err));
     }
 
+    getDetailAuthor(req, res) {
+        authorDAO.getDetailAuthor(req.params.id).then((data) => {
+            if (data.length === 0) {
+                res.status(404).json({
+                    status: "Thất bại!",
+                    message: "NOT FOUND",
+                });
+            } else {
+                res.status(200).json({
+                    status: "Thành công!",
+                    data: data,
+                });
+            }
+        });
+    }
+
     addAuthor(req, res) {
-        if (Object.keys(req.body).length === 0 || !req.body.name || (req.body.dateOfBirth && !isValidDateTime(req.body.dateOfBirth))) {
+        if (!req.body.name || (req.body.dateOfBirth && !isValidDateTime(req.body.dateOfBirth))) {
             res.status(400).json({
                 status: "Thất bại!",
                 message: "Invalid field, name is required & dateTime: YYYY-MM-DD",
             });
-        }else {
-            let tmpImg = 'http://localhost:3000/uploads/' + req.filename;
-            let image = req.file ? tmpImg : null;
-            let description = req.body.description ? req.body.description: null;
-            let dateOfBirth = req.body.dateOfBirth ? req.body.dateOfBirth: null;
+        } else {
+            let imageURL = "http://localhost:3000/uploads/" + req.file.filename;
+            let image = req.file ? imageURL : null;
+            let description = req.body.description ? req.body.description : null;
+            let dateOfBirth = req.body.dateOfBirth ? req.body.dateOfBirth : null;
             authorDAO
                 .addAuthor(image, req.body.name, description, dateOfBirth)
-                .then((value) =>
+                .then((data) =>
                     res.status(200).json({
                         status: "Thành công!",
+                        insertId: data.insertId,
                     })
                 )
                 .catch((err) => console.log(err));

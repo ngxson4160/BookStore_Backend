@@ -2,7 +2,7 @@ const connection = require("../config/db/db");
 
 class BookDAO {
     getListBook(page, pageSize, authorID, price, rating) {
-        let sql = `SELECT book.id, book.name, book.img, book.sold, book.description, author.name AS author, book.importPrice, book.originalPrice, book.salePrice, 
+        let sql = `SELECT book.id, book.name, book.image, book.sold, book.description, author.name AS author, book.importPrice, book.originalPrice, book.salePrice, 
                         book.publisher, book.quantity, book.size, book.rating
                     FROM book 
                         JOIN author ON author.id = book.authorID
@@ -37,11 +37,11 @@ class BookDAO {
     }
 
     getBookBySearch(q, page, pageSize, authorID, price, rating) {
-        let sql = `SELECT book.id, book.name, book.img, book.sold, book.description, author.name AS author, book.importPrice, book.originalPrice, book.salePrice, book.publisher, book.quantity, book.size
+        let sql = `SELECT book.id, book.name, book.image, book.sold, book.description, author.name AS author, book.importPrice, book.originalPrice, book.salePrice, book.publisher, book.quantity, book.size
                     FROM book 
                         JOIN author ON author.id = book.authorID
                     WHERE 
-                        (author.name like '%${q}%' OR book.description like '%${q}%')`;
+                        (author.name like '%${q}%' OR book.name like '%${q}%')`;
         let conditions = []; 
         let valueConditions = [];
         if(authorID){
@@ -62,7 +62,6 @@ class BookDAO {
         }
 
         sql += ` LIMIT ${page}, ${pageSize}`;
-        console.log(sql)
         return new Promise((resolve, reject) => {
             connection.query(sql, valueConditions,(err, rows, fields) => {
                 if (err) {
@@ -74,6 +73,33 @@ class BookDAO {
         });
     }
 
+    addBook(name, image, authorID, publicationDate, description, importPrice, originalPrice, salePrice, publisher, quantity, size){
+        let sql = `INSERT INTO Book_Store.book(name, image, authorID, publicationDate, description, importPrice, originalPrice, salePrice, publisher, quantity, size)
+                        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`
+        let values = [...arguments];
+        return new Promise((resolve, reject) => {
+            connection.query(sql, [...arguments],(err,  data) => {
+                if(err) reject(err)
+                else{
+                    resolve(data)
+                }
+            })
+        })
+    }
+
+    getDetailBook(id){
+        let sql = `SELECT book.id, book.name, book.image, book.sold, book.description, author.name AS author, book.importPrice, book.originalPrice, book.salePrice, 
+                        book.publisher, book.quantity, book.size, book.rating
+                    FROM book 
+                    JOIN author ON author.id = book.authorID
+                    WHERE book.id = ?`
+        return new Promise((resolve, reject) => {
+            connection.query(sql, id, (err, data) => {
+                if(err) reject(err);
+                else resolve(data);
+            })
+        })
+    }
 }
 
 module.exports = new BookDAO();
