@@ -1,5 +1,5 @@
 const bookDAO = require("../DAO/book");
-const isValidDateTime = require("../ultils/CheckFormatDateTime");
+const userController = require("../ultils/CheckFormatData");
 
 class BookController {
     /**CÓ 2 CÁCH LẤY KẾT QUẢ QUERY. 1 LÀ DÙNG ASYNC/AWAIT NHƯ SAU VÀ 2 LÀ DÙNG TRỰC TIẾP PROMISE NHƯ CÁC FUNCTION BÊN DƯỚI*/
@@ -103,7 +103,7 @@ class BookController {
                 req.body.quantity &&
                 req.body.size
             ) ||
-            !isValidDateTime(req.body.publicationDate)
+            !userController.isValidDateTime(req.body.publicationDate)
         ) {
             res.status(400).json({
                 status: "Thất bại!",

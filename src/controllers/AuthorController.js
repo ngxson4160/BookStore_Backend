@@ -1,5 +1,5 @@
 const authorDAO = require("../DAO/author");
-const isValidDateTime = require("../ultils/CheckFormatDateTime");
+const userController = require("../ultils/CheckFormatData");
 
 class AuthorController {
     getListAuthor(req, res) {
@@ -35,7 +35,7 @@ class AuthorController {
     }
 
     addAuthor(req, res) {
-        if (!req.body.name || (req.body.dateOfBirth && !isValidDateTime(req.body.dateOfBirth))) {
+        if (!req.body.name || (req.body.dateOfBirth && !userController.isValidDateTime(req.body.dateOfBirth))) {
             res.status(400).json({
                 status: "Thất bại!",
                 message: "Invalid field, name is required & dateTime: YYYY-MM-DD",
