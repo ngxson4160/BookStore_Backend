@@ -1,6 +1,10 @@
+const jwt = require("jsonwebtoken");
+
 const userDAO = require("../DAO/user");
 const checkFormatData = require("../ultils/CheckFormatData");
 const { cryptPassword, comparePassword } = require("../ultils/hashPassword");
+
+const blacklist = require("../ultils/JwtConfig"); //store token expired
 
 class UserController {
     async signUp(req, res) {
@@ -38,7 +42,7 @@ class UserController {
         try {
             let data = await userDAO.checkUserName(req.body.userName);
             if (data.length > 0) {
-                return res.status(200).json({
+                return res.status(400).json({
                     status: "Thất bại!",
                     message: "Đã tồn tại user này!",
                 });
@@ -59,7 +63,7 @@ class UserController {
                         req.body.lastName,
                         hash,
                         req.body.gender,
-                        "isUser",
+                        'isUser',
                         new Date(),
                         req.body.dateOfBirth,
                         req.body.email,
@@ -93,20 +97,40 @@ class UserController {
 
         comparePassword(req.body.password, data[0].password, (err, isPasswordMatch) => {
             if (err) console.log(err);
-            else {
-                if (isPasswordMatch) {
-                    res.status(200).json({
-                        status: "Thành công!",
-                    });
-                } else {
-                    res.status(404).json({
-                        status: "Thất bại!",
-                        message: "Tải khoản hoặc mật khẩu không chính xác!",
-                    });
-                }
+            else if (isPasswordMatch) {
+                jwt.sign({ data: data }, "Son12345", function (err, token) {
+                    if (err) console.log(err);
+                    else {
+                        return res.status(200).json({
+                            status: "Thành công!",
+                            token: token,
+                        });
+                    }
+                });
+            } else {
+                res.status(404).json({
+                    status: "Thất bại!",
+                    message: "Tải khoản hoặc mật khẩu không chính xác!",
+                });
             }
         });
     }
+
+    logOut(req, res) {
+        let token = req.headers.authorization;
+        if (blacklist.includes(token)) {
+            return res.status(400).json({
+                status: "Thất bại!",
+                message: "Bạn đã logout trước đó rồi.",
+            });
+        } else {
+            blacklist.push(token);
+            return res.status(200).json({
+                status: "Thành công!",
+            });
+        }
+    }
+
 }
 
 module.exports = new UserController();
