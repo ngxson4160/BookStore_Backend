@@ -24,7 +24,7 @@ exports.loginMiddleware = (req, res, next) => {
         }
         else {
             req.role = decode.data[0].role;
-            req.userName = decode.data[0].userName;
+            req.userId = decode.data[0].id;
             next();
         }
     });

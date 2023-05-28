@@ -64,24 +64,27 @@ class BookController {
     }
 
     getDetailBook(req, res) {
-        bookDAO.getDetailBook(req.params.id).then((data) => {
-            if (data.length === 0) {
-                res.status(404).json({
-                    status: "Thất bại!",
-                    message: "NOT FOUND",
-                });
-            } else {
-                data.forEach((value, index) => {
-                    if (typeof value.image === "string") {
-                        data[index].image = JSON.parse(value.image);
-                    }
-                });
-                res.status(200).json({
-                    status: "Thành công!",
-                    data: data,
-                });
-            }
-        });
+        bookDAO
+            .getDetailBook(req.params.id)
+            .then((data) => {
+                if (data.length === 0) {
+                    res.status(404).json({
+                        status: "Thất bại!",
+                        message: "NOT FOUND",
+                    });
+                } else {
+                    data.forEach((value, index) => {
+                        if (typeof value.image === "string") {
+                            data[index].image = JSON.parse(value.image);
+                        }
+                    });
+                    res.status(200).json({
+                        status: "Thành công!",
+                        data: data,
+                    });
+                }
+            })
+            .catch((err) => console.log(err));
     }
 
     addBook(req, res) {

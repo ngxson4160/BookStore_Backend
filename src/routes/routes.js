@@ -11,8 +11,7 @@ function routes(app) {
     app.use("/api/books", bookRoute);
     app.use("/api/authors", authorRoute);
     app.use("/api/users", userRoute);
-    app.use("/api/admins", userRoute);
-    app.use("/api/cart", cartRoute);
+    app.use("/api/carts", cartRoute);
 
 
 
