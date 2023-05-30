@@ -3,7 +3,7 @@ const cartItemDAO = require("../DAO/cartItem");
 class CartController {
     getCart(req, res) {
         cartItemDAO
-            .getCart(req.userId)
+            .getCart(req.userInfo.id)
             .then((data) => {
                 if (data.length === 0) {
                     return res.status(200).json({
@@ -35,7 +35,7 @@ class CartController {
         }
         if (!req.quantity) {
             cartItemDAO
-                .insertItemToCart(req.userId, req.body.bookId, req.body.quantity)
+                .insertItemToCart(req.userInfo.id, req.body.bookId, req.body.quantity)
                 .then((data) =>
                     res.status(200).json({
                         status: "Thành công!",
@@ -45,7 +45,7 @@ class CartController {
                 .catch((err) => console.log(err));
         } else {
             cartItemDAO
-                .updateItem(req.body.quantity, req.userId, req.body.bookId)
+                .updateItem(req.body.quantity, req.userInfo.id, req.body.bookId)
                 .then((data) =>
                     res.status(200).json({
                         status: "Thành công!",
@@ -71,7 +71,7 @@ class CartController {
         }
         if (req.isBookExistInCart && req.body.quantity < 0 && Number(req.body.quantity) + req.quantity === 0) {
             cartItemDAO
-                .deleteItem(req.userId, req.body.bookId)
+                .deleteItem(req.userInfo.id, req.body.bookId)
                 .then((data) => {
                     return res.status(200).json({
                         status: "Thành công!",
@@ -82,7 +82,7 @@ class CartController {
         }
         if (req.isBookExistInCart) {
             cartItemDAO
-                .updateItem(req.body.quantity, req.userId, req.body.bookId)
+                .updateItem(req.body.quantity, req.userInfo.id, req.body.bookId)
                 .then((data) => {
                     return res.status(200).json({
                         status: "Thành công!",
@@ -101,7 +101,7 @@ class CartController {
     deleteItemInCart(req, res) {
         if (req.isBookExistInCart) {
             cartItemDAO
-                .deleteItem(req.userId, req.body.bookId)
+                .deleteItem(req.userInfo.id, req.body.bookId)
                 .then((data) => {
                     return res.status(200).json({
                         status: "Thành công!",
@@ -109,17 +109,18 @@ class CartController {
                     });
                 })
                 .catch((err) => console.log(err));
-        } else {
+        } 
+        else {
             return res.status(404).json({
                 status: "Thất bại!",
-                message: "Không tìm thấy bookId " + req.body.bookId,
+                message: "Không tìm thấy items tương ứng trong cart",
             });
         }
     }
 
     emptyCart(req, res) {
         cartItemDAO
-            .emptyCart(req.userId)
+            .emptyCart(req.userInfo.id)
             .then((data) => {
                 if (data.affectedRows) {
                     return res.status(200).json({

@@ -30,6 +30,36 @@ class AuthorDAO {
             });
         });
     }
+
+    updateAuthor(image, name, description, dateOfBirth, id){
+        let sql = `UPDATE author`;
+        let conditions = [];
+        let value = [];
+        let params = [...arguments]
+
+        if (image) {
+            conditions.push("image = ?");
+        }
+        if (name) {
+            conditions.push("name = ?");
+        }
+        if (description) {
+            conditions.push("description = ?");
+        }
+        if (dateOfBirth) {
+            conditions.push("dateOfBirth = ?");
+        }
+        sql += ' SET ' + conditions.join(', ') + ' WHERE id = ?';
+        params.forEach(param => {
+            if(param) value.push(param);
+        })
+        return new Promise((resolve, reject) => {
+            connection.query(sql, value ,(err, data) =>{
+                if(err) reject(err);
+                else resolve(data)
+            })
+        })
+    }
 }
 
 module.exports = new AuthorDAO();

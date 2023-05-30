@@ -2,13 +2,19 @@ const bookDAO = require('../DAO/book')
 const cartItemDAO = require('../DAO/cartItem')
 
 exports.checkBookExist = (req, res, next) => {
+    if(!req.body.bookId){
+        return res.status(400).json({
+            status: "Thất bại!",
+            message: "bookId is required",
+        });
+    }
     bookDAO
         .getDetailBook(req.body.bookId)
         .then((data) => {
             if (data.length === 0) {
                 res.status(404).json({
                     status: "Thất bại!",
-                    message: "Invalid bookId",
+                    message: "book does not exist",
                 });
             } else {
                 next();
@@ -18,7 +24,7 @@ exports.checkBookExist = (req, res, next) => {
 };
 
 exports.checkItemsInCart = (req, res, next) => {
-        cartItemDAO.getCartItem(req.userId, req.body.bookId)
+        cartItemDAO.getCartItem(req.userInfo.id, req.body.bookId)
             .then((data) =>{
                 if(data.length === 0){
                     req.isBookExistInCart = false;
