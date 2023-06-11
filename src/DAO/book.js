@@ -10,8 +10,13 @@ class BookDAO {
         let conditions = [];
         let valueConditions = [];
         if (authorID) {
-            conditions.push("author.id = ?");
-            valueConditions.push(authorID);
+            let arrAuthor = authorID.split(",");
+            let tempConditions = [];
+            for(let i = 0; i < arrAuthor.length; i++){
+                tempConditions.push("author.id = ?");
+            }
+            conditions.push('(' + tempConditions.join(' OR ') + ')');
+            valueConditions.push(...arrAuthor);
         }
         if (price) {
             conditions.push("book.salePrice between ? AND ?");
