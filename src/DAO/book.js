@@ -42,7 +42,7 @@ class BookDAO {
     }
 
     getBookBySearch(q, page, pageSize, authorID, price, rating) {
-        let sql = `SELECT book.id, book.name, book.image, book.sold, book.description, author.name AS author, book.importPrice, book.originalPrice, book.salePrice, book.publisher, book.quantity, book.size
+        let sql = `SELECT book.id, book.name, book.image, book.sold, book.rating, book.description, author.name AS author, book.importPrice, book.originalPrice, book.salePrice, book.publisher, book.quantity, book.size
                     FROM book 
                         JOIN author ON author.id = book.authorID
                     WHERE 

@@ -11,10 +11,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "src/public")));
 
-app.get('/test', (req, res) => {
-    // console.log(req.query.a);
-    res.json('Test Page');
-})
+// app.get('/test', (req, res) => {
+//     res.json('Test Page');
+// })
 
 routes(app);
 
